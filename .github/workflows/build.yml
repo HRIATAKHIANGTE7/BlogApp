@@ -15,8 +15,8 @@ jobs:
           java-version: 17
           
       - name: Build Debug APK
-        working-directory: ./BlogApp
         run: |
+          cd BlogApp
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           
@@ -25,3 +25,4 @@ jobs:
         with:
           name: app-debug
           path: 'BlogApp/app/build/outputs/apk/debug/*.apk'
+          if-no-files-found: error
