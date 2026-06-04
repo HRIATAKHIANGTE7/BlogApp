@@ -28,6 +28,8 @@ jobs:
           cat settings.gradle.kts >> settings.gradle.kts.new
           mv settings.gradle.kts.new settings.gradle.kts
           echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+          echo "android.useAndroidX=true" >> gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
           echo "org.gradle.configuration-cache=false" >> gradle.properties
         
       - name: Build with Gradle
