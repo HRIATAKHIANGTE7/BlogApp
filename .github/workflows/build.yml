@@ -5,14 +5,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip BlogApp.zip
+      - name: Unzip and check
+        run: |
+          unzip BlogApp.zip
+          echo "=== Folder awm zawng zawng ==="
+          ls -la
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-      - run: chmod +x BlogApp/gradlew
-      - run: cd BlogApp && ./gradlew assembleDebug
+      - name: Make gradlew executable
+        run: chmod +x */gradlew gradlew || true
+      - name: Build APK
+        run: ./*/gradlew assembleDebug || ./gradlew assembleDebug
+      - name: Find APK location
+        run: find . -name "*.apk"
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: BlogApp/app/build/outputs/apk/debug/app-debug.apk
+          path: '**/*.apk'
