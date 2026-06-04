@@ -6,8 +6,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Unzip BlogApp
-        run: unzip BlogApp.zip
+      - name: Unzip and Debug
+        run: |
+          set -e
+          echo "=== Repo files ==="
+          ls -la
+          echo "=== Unzipping ==="
+          unzip BlogApp.zip
+          echo "=== Files after unzip ==="
+          ls -la
+          echo "=== BlogApp folder ==="
+          ls -la BlogApp
       
       - uses: actions/setup-java@v4
         with:
@@ -16,6 +25,7 @@ jobs:
           
       - name: Build Debug APK
         run: |
+          set -e
           cd BlogApp
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
