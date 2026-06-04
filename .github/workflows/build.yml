@@ -1,45 +1,18 @@
-name: Build APK
-on: push
+name: Android CI
+on:
+  push:
+    branches: [ "main" ]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Unzip BlogApp
-        run: unzip BlogApp.zip
-      
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-          
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        
-      - name: Fix ACode Project Files
-        run: |
-          cd BlogApp
-          echo "pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }" > settings.gradle.kts.new
-          echo "dependencyResolutionManagement { repositories { google(); mavenCentral() } }" >> settings.gradle.kts.new
-          cat settings.gradle.kts >> settings.gradle.kts.new
-          mv settings.gradle.kts.new settings.gradle.kts
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
-          echo "android.useAndroidX=true" >> gradle.properties
-          echo "android.enableJetifier=true" >> gradle.properties
-          echo "org.gradle.configuration-cache=false" >> gradle.properties
-        
-      - name: Build with Gradle
-        run: |
-          cd BlogApp
-          gradle assembleDebug --stacktrace
-          
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: BlogApp-APK
-          path: 'BlogApp/app/build/outputs/apk/debug/*.apk'
-          if-no-files-found: error
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug
